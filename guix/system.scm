@@ -1,11 +1,29 @@
 ;; This is an operating system configuration generated
 ;; by the graphical installer.
 
-(use-modules (gnu))
+(use-modules
+ (gnu)
+ (guix inferior)
+ (srfi srfi-1)
+ (guix channels)
+ (gnu packages docker))
 (use-service-modules desktop networking ssh xorg docker)
-(use-package-modules emacs mail lisp)
 
 (operating-system
+   (kernel
+    (let*
+      ((channels
+        (list (channel
+               (name 'nonguix)
+               (url "https://gitlab.com/nonguix/nonguix")
+               (commit "ff6ca98099c7c90e64256236a49ab21fa96fe11e"))
+              (channel
+               (name 'guix)
+               (url "https://git.savannah.gnu.org/git/guix.git")
+               (commit "3be96aa9d93ea760e2d965cb3ef03540f01a0a22"))))
+       (inferior
+        (inferior-for-channels channels)))
+      (first (lookup-inferior-packages inferior "linux" "5.4.21"))))
   (locale "en_US.utf8")
   (timezone "America/Sao_Paulo")
   (keyboard-layout (keyboard-layout "us"))
