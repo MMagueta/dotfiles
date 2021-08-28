@@ -1,0 +1,25 @@
+#+TITLE: Magueta Scripts
+
+* About
+  Contains my Nix and Guix scripts for bootstrapping my machines.
+  
+* How to run
+  
+** Guix
+   #+BEGIN_SRC shell
+     cd guix
+     cp channels.scm ~/.config/guix/
+     sudo guix system reconfigure -L config.scm
+   #+END_SRC
+** Nix
+   #+BEGIN_SRC shell
+     cd nix
+     sudo ln -s configuration.nix /etc/nixos/configuration.nix
+     cp /etc/nixos/hardware-configuration.nix .
+     sudo nixos-rebuild switch
+     home-manager switch -f ./home.nix
+   #+END_SRC
+** MageMacs
+   #+BEGIN_SRC shell
+     git clone https://github.com/MMagueta/MageMacs.git ~/.emacs.d
+   #+END_SRC
