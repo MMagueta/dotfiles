@@ -18,7 +18,8 @@ in
     openjdk11
     clojure-lsp
     clojure
-    dune-release
+    ocaml
+    opam
     ocamlPackages.ocaml-lsp
     racket-minimal
     rnix-lsp
