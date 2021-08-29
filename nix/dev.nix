@@ -12,6 +12,7 @@ in
     dotnet-sdk_5
     curl
     wget
+    python3
     unzip
     gnupg
     sbcl
