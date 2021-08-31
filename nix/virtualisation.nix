@@ -13,6 +13,8 @@
   environment.systemPackages = (
     with pkgs; [
       docker_compose
+      qemu
+      qemu-utils
     ]
   );
 }

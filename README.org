@@ -19,7 +19,3 @@
      sudo nixos-rebuild switch
      home-manager switch -f ./home.nix
    #+END_SRC
-** MageMacs
-   #+BEGIN_SRC shell
-     git clone https://github.com/MMagueta/MageMacs.git ~/.emacs.d
-   #+END_SRC
