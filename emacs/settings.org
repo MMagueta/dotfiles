@@ -238,11 +238,11 @@
     (unless (package-installed-p 'projectile)
       (package-install 'projectile))
     (require 'projectile)
-
+    
     (projectile-mode +1)
     ;;(define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
     (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-
+    
     (use-package dired-sidebar
       :bind (("C-x C-n" . dired-sidebar-toggle-sidebar))
       :ensure t
@@ -255,18 +255,25 @@
       :config
       (push 'toggle-window-split dired-sidebar-toggle-hidden-commands)
       (push 'rotate-windows dired-sidebar-toggle-hidden-commands)
-
+    
       ;;(setq dired-sidebar-subtree-line-prefix "__")
-      (setq dired-sidebar-theme 'vscode)
+      (require 'all-the-icons)
+      (require 'all-the-icons-dired)
+      (use-package all-the-icons
+	:ensure t)
+      (use-package all-the-icons-dired
+	:ensure t)
+      (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+      ;;(setq dired-sidebar-theme 'all-the-icons)
       (setq dired-sidebar-use-term-integration t)
       (setq dired-sidebar-use-custom-font t))
-
+    
     (defun sidebar-toggle ()
       "Toggle both `dired-sidebar' and `ibuffer-sidebar'."
       (interactive)
       (dired-sidebar-toggle-sidebar)
       (ibuffer-sidebar-toggle-sidebar))
-
+    
   #+END_SRC
 * Styling
 ** Startup Screen
@@ -302,8 +309,8 @@
    #+END_SRC
 ** Font
    #+BEGIN_SRC elisp :tangle yes
-     (custom-set-faces '(default ((t (:family "Monaco" :foundry "APPL" :slant normal :weight normal :height 120 :width normal)))))
-     ;;(custom-set-faces'(default ((t (:family "DejaVu Sans Mono" :foundry "PfEd" :slant normal :weight bold :height 120 :width normal)))))
+     ;;(custom-set-faces '(default ((t (:family "Monaco" :foundry "APPL" :slant normal :weight normal :height 120 :width normal)))))
+     (custom-set-faces'(default ((t (:family "DejaVu Sans Mono" :foundry "PfEd" :slant normal :weight normal :height 120 :width normal)))))
    #+END_SRC
 ** Powerline
    #+BEGIN_SRC emacs-lisp :tangle yes

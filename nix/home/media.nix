@@ -7,8 +7,8 @@ in
   home.packages = with pkgs; [
     unstable.discord
     firefox
-    gnome.gnome-tweaks
-    #inkscape
+    # gnome.gnome-tweaks
+    inkscape
   ];
 
 }
