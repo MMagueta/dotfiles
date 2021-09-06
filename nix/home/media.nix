@@ -9,6 +9,10 @@ in
     firefox
     # gnome.gnome-tweaks
     inkscape
+    pavucontrol
+    obs-studio
+    vlc
+    kdenlive
   ];
 
 }

@@ -229,6 +229,8 @@
 
 (defcommand xrandr () ()
 	    (run-shell-command "xrandr --output eDP-1 --off"))
+(defcommand swap-window () ()
+	    (windowlist))
 
 (progn
   (run-shell-command "xrandr --output eDP-1 --off")
@@ -259,3 +261,4 @@
 (define-key *root-map* (kbd "s-f") "update-wallpaper")
 (define-key *root-map* (kbd "s-r") "xrandr")
 (define-key *root-map* (kbd "s-g") "toggle-gaps")
+(define-key *root-map* (kbd "s-b") "swap-window")

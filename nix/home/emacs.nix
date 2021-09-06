@@ -38,7 +38,6 @@ in
             color-theme-sanityinc-tomorrow
             swiper
             slime
-            eglot-fsharp
             company-quickhelp
             python-mode
             helm

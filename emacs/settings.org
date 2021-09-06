@@ -7,47 +7,6 @@
       (package-refresh-contents)
       (package-install 'use-package))
   #+END_SRC
-* EXWM
-  #+BEGIN_SRC emacs-lisp :tangle no
-    ;; (server-start)
-    ;; (use-package exwm
-    ;;   :ensure t)
-    ;; (require 'exwm-config)
-    ;; (exwm-config-ido)
-    ;; (require 'exwm-randr)
-    ;; (setq exwm-randr-workspace-output-plist '(0 "HDMI1" 1 "eDP1"))
-    ;; (add-hook 'exwm-randr-screen-change-hook
-    ;; 	(lambda ()
-    ;; 	  (start-process-shell-command
-    ;; 	  "xrandr" nil "xrandr --output HDMI1 --mode 1920x1080 --primary --left-of eDP1 --output eDP1 --off")))
-    ;;           ;;"xrandr" nil "xrandr --output HDMI1 --mode 1920x1080 --primary --left-of eDP1 --output eDP1 --mode 1366x768")))
-    ;; 	  ;;"xrandr" nil "xrandr --output eDP1 --mode 1366x768")))
-    ;; (exwm-randr-enable)
-    ;; ;; Set the initial number of workspaces (they can also be created later).
-    ;; (setq exwm-workspace-number 2)
-    ;; (setq exwm-input-global-keys
-    ;;      `(
-    ;;        ([?\s-d] . dmenu)
-    ;;        ([?\s-e] . eshell)))
-    ;; (add-hook 'exwm-update-class-hook
-    ;; 	  (lambda ()
-    ;; 	    (unless (or (string-prefix-p "sun-awt-X11-" exwm-instance-name)
-    ;; 			(string= "gimp" exwm-instance-name))
-    ;; 	      (exwm-workspace-rename-buffer exwm-class-name))))
-    ;; (add-hook 'exwm-update-title-hook
-    ;; 	  (lambda ()
-    ;; 	    (when (or (not exwm-instance-name)
-    ;; 		      (string-prefix-p "sun-awt-X11-" exwm-instance-name)
-    ;; 		      (string= "gimp" exwm-instance-name))
-    ;; 	      (exwm-workspace-rename-buffer exwm-title))))
-    ;; (exwm-enable)
-  #+END_SRC
-** DMenu
-   #+BEGIN_SRC emacs-lisp :tangle no
-     ;; (unless (package-installed-p 'dmenu)
-     ;;   (package-install 'dmenu))
-     ;; (require 'dmenu)
-   #+END_SRC
 * Theme
   #+BEGIN_SRC emacs-lisp :tangle yes
     (use-package color-theme-sanityinc-tomorrow
@@ -75,13 +34,7 @@
 	 (cond ((member major-mode programming-modes) (lsp))
 	       (t nil))))
      (use-package lsp-mode
-       :ensure t
-       :config
-       (add-hook 'lsp-mode-hook
-		 (lambda ()
-		   (add-hook 'before-save-hook
-			     (lambda () (lsp-format-buffer buffer-file-name))
-			     nil 'local))))
+       :ensure t)
      (use-package prog-mode
        :config
        (add-hook 'prog-mode-hook #'lsp-wrapper))
@@ -146,11 +99,6 @@
        (add-hook 'kill-emacs-hook 'comint-write-input-ring-all-buffers)
        (add-hook 'kill-buffer-hook 'comint-write-input-ring))
      
-     ;; (use-package eglot-fsharp
-     ;;   :ensure 
-     ;;   :config
-     ;;   (add-hook 'inferior-fsharp-mode-hook 'turn-on-comint-history))
-     
      (use-package company-quickhelp
        :ensure t
        :init
@@ -164,12 +112,12 @@
        :hook (
 	      (fsharp-mode . company-mode))
        :config
+       (add-hook 'fsharp-mode-hook
+		 (lambda ()
+		   (add-hook 'before-save-hook
+			     lsp-format-buffer
+			     nil 'local)))
        (setq inferior-fsharp-program "dotnet fsi")
-       (add-hook 'prog-mode-hook
-	       (lambda ()
-		 (add-hook 'before-save-hook
-			   (lambda () (lsp-format-buffer buffer-file-name))
-			   nil 'local)))
        (add-hook 'inferior-fsharp-mode-hook 'turn-on-comint-history))
    #+END_SRC
 ** Python
@@ -226,6 +174,7 @@
       (define-key global-map "\C-cl" 'org-store-link)
       (define-key global-map "\C-ca" 'org-agenda)
       (setq org-log-done 'time)
+      (setq org-clock-sound "~/.emacs.d/sources/bells.wav")
       (setq org-todo-keywords '((sequence "TODO(t)" "|" "DONE(d)" "CANCELLED(c)"))))
     
     (use-package org-bullets
@@ -257,14 +206,6 @@
       (push 'rotate-windows dired-sidebar-toggle-hidden-commands)
     
       ;;(setq dired-sidebar-subtree-line-prefix "__")
-      (require 'all-the-icons)
-      (require 'all-the-icons-dired)
-      (use-package all-the-icons
-	:ensure t)
-      (use-package all-the-icons-dired
-	:ensure t)
-      (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
-      ;;(setq dired-sidebar-theme 'all-the-icons)
       (setq dired-sidebar-use-term-integration t)
       (setq dired-sidebar-use-custom-font t))
     
