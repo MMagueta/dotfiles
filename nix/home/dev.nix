@@ -1,7 +1,11 @@
 { pkgs, ... }:
-
+let
+  overlays = import ./overlays.nix;
+in
 {
   manual.manpages.enable = true;
+
+  nixpkgs.overlays = [ overlays ];
 
   home.packages = with pkgs; [
     git-crypt
@@ -13,17 +17,25 @@
     unzip
     gnupg
     sbcl
+    ccl
     openjdk11
     clojure-lsp
+    leiningen
+    plantuml
+    graphviz
     clojure
     ocaml
     opam
     ocamlPackages.ocaml-lsp
+    ocamlPackages.utop
     racket-minimal
     rnix-lsp
     neofetch
     texlive.combined.scheme-full
     lispPackages.quicklisp
+    lfe
+    hy
+    elixir
   ];
 
   programs.git = {

@@ -10,10 +10,10 @@
   
   imports =
     [
-        ./stumpwm.nix
+        # ./stumpwm.nix
         ./emacs.nix
         ./media.nix
         ./dev.nix
-        ./interface.nix
+        # ./interface.nix
     ];
 }

@@ -12,7 +12,8 @@ in
     pavucontrol
     obs-studio
     vlc
-    kdenlive
+    electrum
+    minecraft
   ];
 
 }

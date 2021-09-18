@@ -12,31 +12,21 @@
     (use-package color-theme-sanityinc-tomorrow
        :ensure t)
     (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
-    ;;(load-theme 'pastelmac t)
-    ;;(load-theme 'snowish t)
-    ;;(load-theme 'vim-colors t)
-    ;;(load-theme 'hydandata-light t)
-    ;;(load-theme 'resolve t)
-    ;;(load-theme 'mac-classic t)
-    ;;(load-theme 'dracula t)
-    ;;(load-theme 'afternoon t)
-    ;;(load-theme 'occidental t)
-    (load-theme 'sanityinc-tomorrow-blue t)
+    (load-theme 'sanityinc-tomorrow-day t)
   #+END_SRC
 * Tooling
 ** Programming
    #+BEGIN_SRC emacs-lisp :tangle yes
-     (require 'lsp-mode)
+     (use-package lsp-mode
+       :ensure t)
      (defun lsp-wrapper ()
        (let* ((programming-modes '(fsharp-mode
 				   tuareg-mode
 				   nix-mode)))
-	 (cond ((member major-mode programming-modes) (lsp))
+	 (cond ((member major-mode programming-modes) (lsp-mode))
 	       (t nil))))
-     (use-package lsp-mode
-       :ensure t)
      (use-package prog-mode
-       :config
+       :init
        (add-hook 'prog-mode-hook #'lsp-wrapper))
    #+END_SRC
 ** Swiper
@@ -45,11 +35,21 @@
        :ensure t)
      (global-set-key (kbd "\C-s") 'swiper)
    #+END_SRC
-** Common Lisp Slime
+** Common Lisp
    #+BEGIN_SRC emacs-lisp :tangle yes
      (use-package slime
-       :ensure t)
-     (setq inferior-lisp-program "sbcl")
+       :ensure t
+       :config
+       (setq inferior-lisp-program "sbcl")
+       :init
+       (add-hook 'common-lisp-mode-hook #'rainbow-mode)
+       (add-hook 'common-lisp-mode-hook #'smartparens-strict-mode))
+     (use-package common-lisp-mode
+       :mode (("\\.lisp$" .  common-lisp-mode)))
+     (use-package smartparens
+       :ensure t
+       :init
+       (add-hook 'common-lisp-mode-hook (lambda ()(local-set-key (kbd "M-q") #'sp-kill-sexp))))
    #+END_SRC
 ** Nix
    #+BEGIN_SRC emacs-lisp :tangle yes
@@ -105,20 +105,21 @@
        (setq company-quickhelp-delay '1.0)
        :config (company-quickhelp-mode nil))
      
+     (defun lint-before-save ()
+       (add-hook 'before-save-hook
+		 lsp-format-buffer
+		 nil 'local))
+     
      (use-package fsharp-mode
        :ensure t
        :mode (("\\.fs$" .  fsharp-mode)
 	      ("\\.fsx$" .  fsharp-mode))
-       :hook (
-	      (fsharp-mode . company-mode))
+       :init
+       (add-hook 'fsharp-mode #'company-mode)
+       (add-hook 'fsharp-mode-hook #'lint-before-save)
+       (add-hook 'inferior-fsharp-mode-hook #'turn-on-comint-history)
        :config
-       (add-hook 'fsharp-mode-hook
-		 (lambda ()
-		   (add-hook 'before-save-hook
-			     lsp-format-buffer
-			     nil 'local)))
-       (setq inferior-fsharp-program "dotnet fsi")
-       (add-hook 'inferior-fsharp-mode-hook 'turn-on-comint-history))
+       (setq inferior-fsharp-program "dotnet fsi"))
    #+END_SRC
 ** Python
    #+BEGIN_SRC emacs-lisp :tangle yes
@@ -180,7 +181,7 @@
     (use-package org-bullets
       :ensure t
       :hook
-      ((org-mode-hook . (lambda () (org-bullets-mode 1)))))
+      (org-mode-hook . (lambda () (org-bullets-mode 1))))
   #+END_SRC
 * Project
   #+BEGIN_SRC emacs-lisp :tangle yes

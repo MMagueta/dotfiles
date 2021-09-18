@@ -18,6 +18,7 @@ in
         (
           with epkgs; [
             nix-mode
+            lfe-mode
             tuareg #Ocaml mode
             racket-mode
             clojure-mode
@@ -34,6 +35,8 @@ in
             eglot
             lsp-mode
             org-drill
+            elfeed
+            shrface
             use-package
             color-theme-sanityinc-tomorrow
             swiper
@@ -53,6 +56,14 @@ in
             dash
             s
             yasnippet
+            hy-mode
+            smartparens
+            rainbow-mode
+            rainbow-delimiters
+            rainbow-blocks
+            elixir-mode
+            elixir-yasnippets
+            elixir-flycheck
           ]
         )
     );
