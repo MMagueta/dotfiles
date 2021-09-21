@@ -30,6 +30,7 @@ in
             scheme-complete
             flycheck
             transpose-frame
+            evil
             magit
             vscode-icon
             fsharp-mode

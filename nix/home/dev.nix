@@ -88,7 +88,7 @@ in
         dynamic_padding = true;
         decorations = "full";
         dimensions = { lines = 0; columns = 0; };
-        padding = { x = 5; y = 5; };
+        padding = { x = 1; y = 1; };
       };
 
       scrolling = {
@@ -96,7 +96,7 @@ in
         multiplier = 3;
       };
 
-      mouse = { hide_when_typing = true; };
+      mouse = { hide_when_typing = false; };
 
       font = let
         fontname = "DejaVu Sans Mono";
@@ -115,10 +115,6 @@ in
           background = "0x24283b";
           foreground = "0xc0caf5";
         };
-        #cursor = {
-        #text = "";
-        #cursor = "";
-        #};
         normal = {
           black = "0x1D202F";
           red = "0xf7768e";
