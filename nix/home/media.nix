@@ -14,6 +14,7 @@ in
     vlc
     electrum
     minecraft
+    calibre
   ];
 
 }

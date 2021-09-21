@@ -29,6 +29,7 @@ in
             geiser
             scheme-complete
             flycheck
+            transpose-frame
             magit
             vscode-icon
             fsharp-mode
@@ -63,17 +64,17 @@ in
             rainbow-blocks
             elixir-mode
             elixir-yasnippets
-            elixir-flycheck
+            inf-elixir
           ]
         )
     );
   };
 
   home.file = {
-   ".emacs.d" = {
-     source = ../../emacs;
-     recursive = true;
-   };
+    ".emacs.d" = {
+      source = ../../emacs;
+      recursive = true;
+    };
   };
 
   xresources.properties = {
