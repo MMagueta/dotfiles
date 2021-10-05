@@ -13,17 +13,18 @@ in
     dotnet-sdk_5
     curl
     wget
-    python3
+    gcc
+    ccls
+    python38
+    python38Packages.python-language-server
     unzip
     gnupg
     sbcl
     ccl
     openjdk11
-    clojure-lsp
     leiningen
     plantuml
     graphviz
-    clojure
     ocaml
     opam
     ocamlPackages.ocaml-lsp

@@ -66,6 +66,7 @@ in
             elixir-mode
             elixir-yasnippets
             inf-elixir
+            aggressive-indent
           ]
         )
     );

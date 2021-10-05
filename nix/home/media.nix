@@ -1,9 +1,9 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 let
   unstable = import <nixpkgs> { config = { allowUnfree = true; }; };
 in
 {
-
+  
   home.packages = with pkgs; [
     unstable.discord
     firefox
@@ -15,6 +15,7 @@ in
     electrum
     minecraft
     calibre
-  ];
-
+    wine
+    winetricks
+  ];  
 }
