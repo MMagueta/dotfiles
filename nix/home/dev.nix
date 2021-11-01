@@ -1,11 +1,15 @@
 { pkgs, ... }:
 let
-  overlays = import ./overlays.nix;
+  dotnet-overlay = import ./dotnet6-overlay.nix;
+  jetbrains-overlay = import ./jetbrains-overlay.nix;
 in
 {
   manual.manpages.enable = true;
 
-  nixpkgs.overlays = [ overlays ];
+  nixpkgs.overlays = [ 
+    dotnet-overlay
+    jetbrains-overlay
+  ];
 
   home.packages = with pkgs; [
     git-crypt
@@ -13,16 +17,13 @@ in
     dotnet-sdk_5
     curl
     wget
-    gcc
-    ccls
+    clang
+    libcxx
     python38
-    python38Packages.python-language-server
     unzip
     gnupg
     sbcl
-    ccl
     openjdk11
-    leiningen
     plantuml
     graphviz
     ocaml
@@ -36,7 +37,10 @@ in
     lispPackages.quicklisp
     lfe
     hy
-    elixir
+    factor-lang
+    jupyter
+    jetbrains.rider
+    patchelf
   ];
 
   programs.git = {
@@ -107,9 +111,9 @@ in
           normal = { family = fontname; style = "Semibold"; };
           bold = { family = fontname; style = "Bold"; };
           italic = { family = fontname; style = "Semibold Italic"; };
-          size = 14;
+          size = 12;
         };
-      cursor.style = "Block";
+      cursor.style = "Bar";
 
       colors = {
         primary = {

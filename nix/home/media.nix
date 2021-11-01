@@ -7,6 +7,8 @@ in
   home.packages = with pkgs; [
     unstable.discord
     firefox
+    nyxt
+    # tor-browser-bundle-bin
     # gnome.gnome-tweaks
     inkscape
     pavucontrol
@@ -17,5 +19,6 @@ in
     calibre
     wine
     winetricks
+    # teams
   ];  
 }
