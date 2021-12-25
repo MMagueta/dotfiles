@@ -1,35 +1,40 @@
-(require 'use-package)
-  
-;; (use-package color-theme-sanityinc-tomorrow
-;;    :ensure t)
-;; (load-theme 'sanityinc-tomorrow-blue t)
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(package-initialize)
+
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
-(load-theme 'vim-colors t)
+(load-theme 'pastelmac t)
 
 (setq-default cursor-type 'bar)
 
-(defun nixos-patchelf-clangd ()
-  (interactive)
-  (shell-command "patchelf --set-interpreter /nix/store/gk42f59363p82rg2wv2mfy71jn5w4q4c-glibc-2.32-48/lib/ld-linux-x86-64.so.2 ~/.emacs.d/.cache/lsp/clangd/clangd_12.0.0/bin/clangd"))
-   
-(require 'lsp-mode)
-(defun lsp-wrapper ()
-   (let* ((programming-modes '(fsharp-mode
-			       tuareg-mode
-			       nix-mode)))
-	 (cond ((member major-mode programming-modes) (lsp))
-	   (t nil))))
+(setq create-lockfiles nil)
+
 (use-package lsp-mode
-   :ensure t
-   :config
-   (add-hook 'lsp-mode-hook
-		 (lambda ()
-		   (add-hook 'before-save-hook
-			 (lambda () (lsp-format-buffer buffer-file-name))
-			 nil 'local))))
-(use-package prog-mode
-   :config
-   (add-hook 'prog-mode-hook #'lsp-wrapper))
+  :ensure t)
+
+(use-package lsp-ui
+  :ensure t)
+
+(use-package lsp-treemacs
+  :ensure t)
+
+(use-package nix-mode
+  :ensure t
+  :hook (nix-mode . (lambda () (lsp))))
+
+(use-package tuareg
+  :ensure t
+  :hook (tuareg-mode . (lambda () (lsp))))
+
+(use-package swift-mode
+  :ensure t
+  :hook (swift-mode . (lambda () (lsp))))
+
+(use-package lsp-sourcekit
+  :after lsp-mode
+  :ensure t
+  :config
+  (setq lsp-sourcekit-executable "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp"))
 
 (use-package swiper
    :ensure t)
@@ -46,8 +51,6 @@
 		   :server-id 'nix))
   
 (use-package comint
-   ;; This is based on
-   ;; https://oleksandrmanzyuk.wordpress.com/2011/10/23/a-persistent-command-history-in-emacs/
    :config
    (defun comint-write-history-on-exit (process event)
 	 (comint-write-input-ring)
@@ -88,27 +91,16 @@
    :ensure t
    :mode (("\\.fs$" .  fsharp-mode)
 	  ("\\.fsx$" .  fsharp-mode))
-   :hook (
-	  (fsharp-mode . company-mode))
+   :hook ((fsharp-mode . company-mode)
+	  (fsharp-mode . (lambda () (lsp))))
    :config
    (setq inferior-fsharp-program "dotnet fsi")
-   (add-hook 'prog-mode-hook
-	   (lambda ()
-		 (add-hook 'before-save-hook
-			   (lambda () (lsp-format-buffer buffer-file-name))
-			   nil 'local)))
    (add-hook 'inferior-fsharp-mode-hook 'turn-on-comint-history))
-   
-(org-babel-do-load-languages
-  'org-babel-load-languages
-  '((python . t)))
-
    
 (use-package magit
    :ensure t
    :init
    (global-set-key (kbd "C-x g") 'magit-status))
-
    
 (use-package helm
    :ensure t
@@ -117,20 +109,18 @@
    :config
    (global-set-key (kbd "M-x") 'helm-M-x)
    (global-set-key (kbd "C-x b") 'helm-buffers-list))
-
    
 (use-package multiple-cursors
    :ensure t
    :config
    (global-set-key (kbd "C-c m c") 'mc/edit-lines))
 
-   
-(use-package plantuml-mode
-   :ensure t
-   :init
-   (setq org-plantuml-jar-path (expand-file-name "~/.emacs.d/sources/plantuml-jar-gplv2-1.2021.8/plantuml.jar"))
-   (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
-   (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t))))
+;; (use-package plantuml-mode
+;;    :ensure t
+;;    :init
+;;    (setq org-plantuml-jar-path (expand-file-name "./sources/plantuml-jar-gplv2-1.2021.8/plantuml.jar"))
+;;    (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
+;;    (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t))))
 
   
 (use-package eshell-syntax-highlighting
@@ -145,9 +135,25 @@
   (define-key global-map "\C-cl" 'org-store-link)
   (define-key global-map "\C-ca" 'org-agenda)
   (setq org-log-done 'time)
-  (setq org-agenda-files (list "~/.emacs.d/Agenda/work.org"
-				   "~/.emacs.d/Agenda/personal.org"))
+  (setq org-agenda-files (list "./Agenda/work.org"
+			      "./Agenda/personal.org"))
   (setq org-todo-keywords '((sequence "TODO(t)" "|" "DONE(d)" "CANCELLED(c)"))))
+
+
+(use-package org-super-agenda
+  :ensure t
+  :config
+  (setq org-super-agenda-groups
+	'((:name "Next Items"
+		 :time-grid t
+		 :tag ("NEXT" "outbox"))
+          (:name "Important"
+		 :priority "A")
+          (:name "Quick Picks"
+		 :effort< "0:30")
+          (:priority<= "B"
+                       :scheduled future
+                       :order 1))))
 
 (use-package org-bullets
   :ensure t
@@ -155,66 +161,44 @@
   ((org-mode-hook . (lambda () (org-bullets-mode 1)))))
 
   
-(unless (package-installed-p 'projectile)
-  (package-install 'projectile))
-(require 'projectile)
+(use-package projectile
+  :ensure t)
 
 (projectile-mode +1)
 (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 
-(use-package dired-sidebar
-  :bind (("C-x C-n" . dired-sidebar-toggle-sidebar))
-  :ensure t
-  :commands (dired-sidebar-toggle-sidebar)
-  :init
-  (add-hook 'dired-sidebar-mode-hook
-		(lambda ()
-		  (unless (file-remote-p default-directory)
-		(auto-revert-mode))))
-  :config
-  (push 'toggle-window-split dired-sidebar-toggle-hidden-commands)
-  (push 'rotate-windows dired-sidebar-toggle-hidden-commands)
+(use-package all-the-icons
+  :ensure t)
 
-  (setq dired-sidebar-theme 'vscode)
-  (setq dired-sidebar-use-term-integration t)
-  (setq dired-sidebar-use-custom-font t))
-
-(defun sidebar-toggle ()
-  "Toggle both `dired-sidebar' and `ibuffer-sidebar'."
-  (interactive)
-  (dired-sidebar-toggle-sidebar)
-  (ibuffer-sidebar-toggle-sidebar))
-
-   (use-package dashboard
+(use-package dashboard
   :ensure t
   :diminish dashboard-mode
   :config
   (setq dashboard-banner-logo-title "Welcome to MageMacs, a magic GNU Emacs customization")
-  (setq dashboard-startup-banner "~/.emacs.d/sources/images/emacs.svg")
+  (setq dashboard-startup-banner "./sources/images/emacs.svg")
   (setq dashboard-items '((recents  . 10)
-			  (bookmarks . 10)
-			  (projects . 10)))
+			 (bookmarks . 10)
+		          (projects . 10)))
   (dashboard-setup-startup-hook))
-  (fringe-mode 1)
-  (scroll-bar-mode -1)
-  
- (menu-bar-mode -1)
- (tool-bar-mode -1)
- (toggle-scroll-bar -1)
- (add-hook 'prog-mode-hook 'linum-mode)
- (display-battery-mode t)
- (display-time-mode t)
- (unless (package-installed-p 'vscode-icon)
- (package-install 'vscode-icon))
- (require 'vscode-icon)
- (use-package transpose-frame
- :ensure t)
+
+(fringe-mode 1)
+(scroll-bar-mode -1)
+
+(menu-bar-mode +1)
+(tool-bar-mode -1)
+(toggle-scroll-bar -1)
+(add-hook 'prog-mode-hook 'linum-mode)
+(display-battery-mode t)
+(display-time-mode t)
+
+(use-package transpose-frame
+   :ensure t)
 
 (custom-set-faces
- '(default ((t (:family "Source Code Pro Medium" :foundry "APPL" :slant normal :weight normal :height 100 :width normal)))))
- ;;(custom-set-faces'(default ((t (:family "DejaVu Sans Mono" :foundry "PfEd" :slant normal :weight bold :height 120 :width normal)))))
- (unless (package-installed-p 'powerline)
-   (package-install 'powerline))
- (require 'powerline)
- (powerline-default-theme)
- (display-battery-mode -1)
+ '(default ((t (:family "Menlo" :foundry "APPL" :slant normal :weight normal :height 140 :width normal)))))
+
+(use-package powerline
+  :ensure t)
+
+(powerline-default-theme)
+(display-battery-mode -1)
