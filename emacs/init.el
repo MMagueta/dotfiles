@@ -2,10 +2,12 @@
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 
-(add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
-(load-theme 'pastelmac t)
+(use-package pastelmac-theme
+  :ensure t
+  :config
+  (load-theme 'pastelmac t))
 
-(setq-default cursor-type 'bar)
+;; (setq-default cursor-type 'bar)
 
 (setq create-lockfiles nil)
 
@@ -25,6 +27,14 @@
 (use-package tuareg
   :ensure t
   :hook (tuareg-mode . (lambda () (lsp))))
+
+(use-package lsp-python-ms
+  :ensure t)
+
+(use-package python-mode
+  :ensure t
+  :after lsp-python-ms
+  :hook (python-mode . (lambda () (lsp))))
 
 (use-package swift-mode
   :ensure t
@@ -85,7 +95,9 @@
    :ensure t
    :init
    (setq company-quickhelp-delay '1.0)
-   :config (company-quickhelp-mode nil))
+   :config
+   (company-quickhelp-mode nil)
+   (add-hook 'prog-mode-hook 'linum-mode))
  
 (use-package fsharp-mode
    :ensure t
@@ -94,6 +106,7 @@
    :hook ((fsharp-mode . company-mode)
 	  (fsharp-mode . (lambda () (lsp))))
    :config
+   (setq compile-command "dotnet watch run")
    (setq inferior-fsharp-program "dotnet fsi")
    (add-hook 'inferior-fsharp-mode-hook 'turn-on-comint-history))
    
@@ -140,32 +153,16 @@
   (setq org-todo-keywords '((sequence "TODO(t)" "|" "DONE(d)" "CANCELLED(c)"))))
 
 
-(use-package org-super-agenda
-  :ensure t
-  :config
-  (setq org-super-agenda-groups
-	'((:name "Next Items"
-		 :time-grid t
-		 :tag ("NEXT" "outbox"))
-          (:name "Important"
-		 :priority "A")
-          (:name "Quick Picks"
-		 :effort< "0:30")
-          (:priority<= "B"
-                       :scheduled future
-                       :order 1))))
-
 (use-package org-bullets
   :ensure t
   :hook
   ((org-mode-hook . (lambda () (org-bullets-mode 1)))))
-
   
 (use-package projectile
-  :ensure t)
-
-(projectile-mode +1)
-(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+  :ensure t
+  :config
+  (projectile-mode +1)
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
 
 (use-package all-the-icons
   :ensure t)
@@ -177,17 +174,16 @@
   (setq dashboard-banner-logo-title "Welcome to MageMacs, a magic GNU Emacs customization")
   (setq dashboard-startup-banner "./sources/images/emacs.svg")
   (setq dashboard-items '((recents  . 10)
-			 (bookmarks . 10)
+			  (bookmarks . 10)
 		          (projects . 10)))
-  (dashboard-setup-startup-hook))
+  (dashboard-setup-startup-hook)
+  (setq dashboard-footer-messages '()))
 
 (fringe-mode 1)
 (scroll-bar-mode -1)
-
 (menu-bar-mode +1)
 (tool-bar-mode -1)
 (toggle-scroll-bar -1)
-(add-hook 'prog-mode-hook 'linum-mode)
 (display-battery-mode t)
 (display-time-mode t)
 
@@ -198,7 +194,7 @@
  '(default ((t (:family "Menlo" :foundry "APPL" :slant normal :weight normal :height 140 :width normal)))))
 
 (use-package powerline
-  :ensure t)
-
-(powerline-default-theme)
-(display-battery-mode -1)
+  :ensure t
+  :config
+  (powerline-default-theme)
+  (display-battery-mode -1))
