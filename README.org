@@ -1,21 +1,13 @@
 #+TITLE: Magueta Scripts
 
 * About
-  Contains my Nix and Guix scripts for bootstrapping my machines.
+  Contains my Nix flake for bootstrapping my macintosh.
   
 * How to run
   
-** Guix
-   #+BEGIN_SRC shell
-     cd guix
-     cp channels.scm ~/.config/guix/
-     sudo guix system reconfigure -L config.scm
-   #+END_SRC
 ** Nix
-   #+BEGIN_SRC shell
-     cd nix
-     sudo ln -s configuration.nix /etc/nixos/configuration.nix
-     cp /etc/nixos/hardware-configuration.nix .
-     sudo nixos-rebuild switch
-     home-manager switch -f ./home.nix
-   #+END_SRC
+  #+BEGIN_SRC shell
+    sh <(curl -L https://nixos.org/nix/install) --darwin-use-unencrypted-nix-store-volume --daemon
+    chmod +x ./rebuild.sh
+    ./rebuild.sh
+  #+END_SRC
