@@ -19,6 +19,7 @@
     auto-optimise-store = true
     experimental-features = nix-command flakes
   '' + lib.optionalString (pkgs.system == "aarch64-darwin") ''
+    system = x86_64-darwin
     extra-platforms = x86_64-darwin aarch64-darwin
   '';
 
@@ -30,6 +31,7 @@
 
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
+  services.nix-daemon.enableSocketListener = true;
 
   # Apps
   # `home-manager` currently has issues adding them to `~/Applications`
