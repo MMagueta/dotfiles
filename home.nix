@@ -9,6 +9,8 @@
 
   home.packages = with pkgs; [
     ispell
+    cask #for emacs flycheck-elsa
+    gcc
     wget
     dotnet-sdk
     ispell
@@ -27,13 +29,11 @@
     cocoapods
     m-cli
   ];
+
   programs.git = {
     enable = true;
     userEmail = "maguetamarcos@gmail.com";
     userName = "Marcos Magueta";
-    signing = {
-      signByDefault = true;
-    };
     delta = {
       enable = true;
     };
@@ -44,15 +44,19 @@
       {
         condition = "gitdir:~/Project/Personal/";
         contents = {
-          commit.gpgsign = true;
           user.email = "maguetamarcos@gmail.com";
         };
       }
       {
         condition = "gitdir:~/Project/Work/";
         contents = {
-          commit.gpgsign = true;
           user.email = "marcosmagueta@datarisk.io";
+        };
+      }
+      {
+        condition = "gitdir:~/.emacs.d/";
+        contents = {
+          user.email = "maguetamarcos@gmail.com";
         };
       }
     ];

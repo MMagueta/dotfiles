@@ -25,9 +25,11 @@
 
   # Create /etc/bashrc that loads the nix-darwin environment.
   programs.zsh.enable = true;
-    #shellAliases = {
-    #  emacs = "arch -x86_64 /Applications/Emacs.app/Contents/MacOS/Emacs-x86_64-10_11"; # Requires Rosetta to be installed
-    #};
+
+  environment.shellAliases = {
+    emacs = "arch -x86_64 /Applications/Emacs.app/Contents/MacOS/Emacs-x86_64-10_11 & disown";
+    emacs-nw = "arch -x86_64 /Applications/Emacs.app/Contents/MacOS/Emacs-x86_64-10_11 -nw";
+  };
 
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
@@ -41,21 +43,16 @@
     terminal-notifier
   ];
 
+  programs.gnupg.agent.enable = true;
+  programs.gnupg.agent.enableSSHSupport = true;
+
   # https://github.com/nix-community/home-manager/issues/423
   # environment.variables = {
   #   TERMINFO_DIRS = "${pkgs.kitty.terminfo.outPath}/share/terminfo";
   # };
   programs.nix-index.enable = true;
 
-  # Fonts
-  fonts.enableFontDir = true;
-  fonts.fonts = with pkgs; [
-     recursive
-     (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
-   ];
-
   # Keyboard
   system.keyboard.enableKeyMapping = true;
   system.keyboard.remapCapsLockToControl = true;
-
 }
