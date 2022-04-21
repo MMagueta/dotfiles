@@ -27,8 +27,14 @@
   programs.zsh.enable = true;
 
   environment.shellAliases = {
-    emacs = "arch -x86_64 /Applications/Emacs.app/Contents/MacOS/Emacs-x86_64-10_11 & disown";
-    emacs-nw = "arch -x86_64 /Applications/Emacs.app/Contents/MacOS/Emacs-x86_64-10_11 -nw";
+    # emacs = "arch -x86_64 /Applications/Emacs.app/Contents/MacOS/Emacs-x86_64-10_11 & disown";
+    # emacs-nw = "arch -x86_64 /Applications/Emacs.app/Contents/MacOS/Emacs-x86_64-10_11 -nw";
+    emacs = "/Applications/Emacs.app/Contents/MacOS/Emacs-arm64-11 & disown";
+    emacs-nw = "/Applications/Emacs.app/Contents/MacOS/Emacs-arm64-11 -nw";
+    fsc = "dotnet /nix/store/*-dotnet-sdk-6.0.100/sdk/6.0.100/FSharp/fsc.dll";
+    fsi = "dotnet /nix/store/*-dotnet-sdk-6.0.100/sdk/6.0.100/FSharp/fsi.dll";
+    raco = "/Applications/Racket v8.4/bin/raco";
+    racket = "/Applications/Racket v8.4/bin/racket";
   };
 
   # Auto upgrade nix package and the daemon service.
