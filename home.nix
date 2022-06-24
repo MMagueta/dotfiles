@@ -1,50 +1,39 @@
 { config, pkgs, lib, ... }:
-let
-  dotnet-overlay = import ~/.config/overlay-dotnet6.nix;
-in
 {
   home.stateVersion = "22.05";
   
   programs.direnv.enable = true;
   programs.direnv.nix-direnv.enable = true;
-  programs.htop.enable = true;
-  programs.htop.settings.show_program_path = true;
 
-  nixpkgs.overlays = [
-    dotnet-overlay
-  ];
+  nixpkgs.overlays = [];
 
   home.packages = with pkgs; [
+    htop
     ispell
-    cask # for emacs flycheck-elsa
+    cask
     wget
     sqls
-    # scala
-    # sbt
-    # metals
-    nodejs
-    # clojure
-    # clojure-lsp
-    # jdk11
     plantuml
-    # sbcl
+    sbcl
     # swiProlog
     gnupg
     gnutls
     dotnet-sdk
     # netcoredbg
-    powershell
-    # gforth
-    python39Packages.nbconvert
-    poetry
-    hy
-    python39Packages.virtualenv
+    python310
     git-crypt
     rnix-lsp
     neofetch
-    kubectl
-    azure-cli
     nix-index
+    ghc
+    haskell-language-server
+    stack
+    cabal2nix
+    cabal-install
+    ocaml
+    opam
+    dune_2
+    ocamlPackages.ocaml-lsp
     niv
   ] ++ lib.optionals stdenv.isDarwin [
     # m-cli
@@ -53,53 +42,27 @@ in
   programs.git = {
     enable = true;
     userName = "Marcos Magueta";
-    delta = {
-      enable = true;
+    delta.enable = true;
+    lfs.enable = true;
+    userEmail = "maguetamarcos@gmail.com";
+    signing = {
+       key = "CE25E21959B460A84BDFB93F0AD3A1263F9DE73E";
+       signByDefault = true;
     };
-    lfs = {
-      enable = true;
-    };
-    includes = [
-      {
-        condition = "gitdir/i:~/Project/Personal/";
-        contents = {
-          user = {
-            name = "Marcos Magueta";
-            email = "maguetamarcos@gmail.com";
-            signingKey = "0AD3A1263F9DE73E";
-          };
-          commit = {
-            gpgSign = true;
-          };
-        };
-      }
-      {
-        condition = "gitdir/i:~/Project/Work/";
-        contents = {
-          user = {
-            name = "Marcos Magueta";
-            email = "marcosmagueta@datarisk.io";
-            signingKey = "E6780F25531C589F";
-          };
-          commit = {
-            gpgSign = true;
-          };
-        };
-      }
-      {
-        condition = "gitdir/i:~/.emacs.d/";
-        contents = {
-          user = {
-            name = "Marcos Magueta";
-            email = "maguetamarcos@gmail.com";
-            signingKey = "0AD3A1263F9DE73E";
-          };
-          commit = {
-            gpgSign = true;
-          };
-        };
-      }
-    ];
-      
   };
+
+  programs.zsh = {
+    enable = true;
+    initExtra = ''
+       export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+       gpgconf --launch gpg-agent
+    '';
+  };
+
+  # services.gpg-agent = {
+  #   enable = true;
+  #   defaultCacheTtl = 1800;
+  #   enableSshSupport = true;
+  #   sshKeys = ["9AA3054F8732794A8B33510B5B9E5F9D7211E7B1"];
+  # };
 }
