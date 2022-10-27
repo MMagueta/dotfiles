@@ -8,7 +8,6 @@
     darwin.inputs.nixpkgs.follows = "nixpkgs-unstable";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs-unstable";
-
   };
 
   outputs = { self, darwin, nixpkgs, home-manager, ... }@inputs:
@@ -22,7 +21,6 @@
       overlays = attrValues self.overlays ++ singleton (
         final: prev: (optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
           inherit (final.pkgs-x86)
-            haskell-language-server
             niv;
         })
       );

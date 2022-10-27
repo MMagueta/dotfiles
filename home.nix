@@ -8,6 +8,14 @@
   nixpkgs.overlays = [];
 
   home.packages = with pkgs; [
+    gnumake
+    # haskell.compiler.ghc8107
+    # haskell.packages.ghc8107.cabal-install
+    # haskell.packages.ghc8107.haskell-language-server
+    # stack
+    # hlint
+    fstar
+    z3
     htop
     ispell
     cask
@@ -20,21 +28,17 @@
     gnutls
     dotnet-sdk
     # netcoredbg
-    python310
     git-crypt
     rnix-lsp
     neofetch
     nix-index
-    ghc
-    haskell-language-server
-    stack
-    cabal2nix
-    cabal-install
     ocaml
     opam
     dune_2
     ocamlPackages.ocaml-lsp
+    ocamlPackages.ocamlbuild
     niv
+    gcc
   ] ++ lib.optionals stdenv.isDarwin [
     # m-cli
   ];
